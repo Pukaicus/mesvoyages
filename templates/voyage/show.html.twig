@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voyage{% endblock %}
+
+{% block body %}
+    <h1>Détails du Voyage</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ voyage.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ voyage.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ voyage.description }}</td>
+            </tr>
+            {# --- DEBUT DE L'AJOUT POUR L'IMAGE --- #}
+            <tr>
+                <th>Photo</th>
+                <td>
+                    {% if voyage.image %}
+                        <img src="{{ asset('uploads/images/' ~ voyage.image) }}" alt="Photo de {{ voyage.titre }}" style="width: 300px; border-radius: 8px; border: 1px solid #ddd;">
+                    {% else %}
+                        <span class="text-muted">Aucune photo disponible</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {# --- FIN DE L'AJOUT --- #}
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <a href="{{ path('app_voyage_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_voyage_edit', {'id': voyage.id}) }}" class="btn btn-primary">Modifier</a>
+    </div>
+
+    <div class="mt-2">
+        {{ include('voyage/_delete_form.html.twig') }}
+    </div>
+{% endblock %}
