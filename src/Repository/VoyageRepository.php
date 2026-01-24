@@ -6,9 +6,6 @@ use App\Entity\Voyage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Voyage>
- */
 class VoyageRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -17,14 +14,15 @@ class VoyageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Cette méthode récupère les 2 derniers voyages ajoutés en base de données
      * @return Voyage[]
      */
-    public function findLastTwo(): array
+    public function findByEnvironnement(string $environnementName): array
     {
         return $this->createQueryBuilder('v')
-            ->orderBy('v.id', 'DESC') // Trie par ID du plus grand au plus petit
-            ->setMaxResults(2)        // Limite le résultat à 2
+            ->join('v.environnement', 'e')
+            ->where('LOWER(e.nom) LIKE LOWER(:val)')
+            ->setParameter('val', '%' . $environnementName . '%')
+            ->orderBy('v.datecreation', 'DESC')
             ->getQuery()
             ->getResult();
     }

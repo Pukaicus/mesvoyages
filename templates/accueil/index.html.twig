@@ -1,21 +1,23 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Bienvenue sur Mes Voyages{% endblock %}
+
 {% block body %}
 <div class="container text-center mt-5">
-    <h1>Bienvenue sur mon site de voyages</h1>
+    <h1 style="color: #6f42c1;">Bienvenue sur mon site de voyages</h1>
     <p class="lead">Découvrez mes dernières aventures à travers le monde.</p>
     
     <div class="row mt-4">
         {% for voyage in voyages %}
             <div class="col-md-6 mb-4">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
                     {% if voyage.image %}
                         <img src="{{ asset('uploads/images/' ~ voyage.image) }}" class="card-img-top" alt="{{ voyage.titre }}" style="height: 200px; object-fit: cover;">
                     {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ voyage.titre }}</h5>
-                        <p class="card-text">{{ voyage.description|slice(0, 100) }}...</p>
-                        <a href="{{ path('app_voyage_show', {'id': voyage.id}) }}" class="btn btn-outline-primary">Voir le détail</a>
+                        <h5 class="card-title" style="color: #6f42c1;">{{ voyage.titre }}</h5>
+                        <p class="card-text text-muted">{{ voyage.description|slice(0, 100) }}...</p>
+                        <a href="{{ path('app_voyage_show', {'id': voyage.id}) }}" class="btn btn-outline-primary" style="border-radius: 20px;">Voir le détail</a>
                     </div>
                 </div>
             </div>
@@ -23,7 +25,7 @@
     </div>
 
     <hr class="my-5">
-    <p>Vous voulez voir tous mes périples ? <a href="{{ path('app_voyage_index') }}">Cliquez ici pour voir la liste complète</a>.</p>
-    <p>Une question ? <a href="{{ path('app_contact') }}">Contactez-moi !</a></p>
+    <p>Vous voulez voir tous mes périples ? <a href="{{ path('app_voyage_index') }}" class="text-decoration-none" style="color: #6f42c1; font-weight: bold;">Cliquez ici pour voir la liste complète</a>.</p>
+    <p>Une question ? <a href="{{ path('app_contact') }}" class="text-decoration-none">Contactez-moi !</a></p>
 </div>
 {% endblock %}

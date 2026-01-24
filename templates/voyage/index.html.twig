@@ -1,37 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Voyage index{% endblock %}
+{% block title %}Gestion des Voyages{% endblock %}
 
 {% block body %}
-    <h1>Voyage index</h1>
+<style>
+    :root { --main-purple: #6f42c1; --light-purple: #f3e5f5; }
+    .table thead { background-color: var(--main-purple); color: white; }
+    .btn-purple { background-color: var(--main-purple); color: white; border-radius: 20px; padding: 8px 15px; text-decoration: none; display: inline-block; border:none; }
+    .badge-env { background-color: var(--light-purple); color: var(--main-purple); border: 1px solid var(--main-purple); padding: 5px 10px; border-radius: 15px; font-size: 0.85em; }
+    .city-link { color: var(--main-purple); font-weight: bold; text-decoration: none; }
+    .note-high { color: #28a745; font-weight: bold; }
+    .note-low { color: #dc3545; font-weight: bold; }
+    .img-mini { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; }
+    .sort-btn { background: #0d6efd; color: white; border: none; border-radius: 3px; padding: 0 5px; font-size: 0.7em; margin-left: 5px; }
+</style>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for voyage in voyages %}
-            <tr>
-                <td>{{ voyage.id }}</td>
-                <td>{{ voyage.titre }}</td>
-                <td>{{ voyage.description }}</td>
-                <td>
-                    <a href="{{ path('app_voyage_show', {'id': voyage.id}) }}">show</a>
-                    <a href="{{ path('app_voyage_edit', {'id': voyage.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 style="color: var(--main-purple); font-weight: 800;">🌍 Voyage index</h1>
+        <a href="{{ path('app_voyage_new') }}" class="btn-purple shadow-sm">Create new</a>
+    </div>
 
-    <a href="{{ path('app_voyage_new') }}">Create new</a>
+    {# Barre de recherche POST pour le filtrage par environnement #}
+    <div class="card mb-4 border-0 shadow-sm" style="background-color: #f8f9fa; border-left: 5px solid var(--main-purple) !important;">
+        <div class="card-body">
+            <form method="POST" action="{{ path('app_voyage_index') }}" class="row g-3 align-items-center">
+                <div class="col-md-9">
+                    <input type="text" name="environnement_filtre" class="form-control" placeholder="Rechercher par environnement (ex: Mer, Montagne...)">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive shadow-sm" style="border-radius: 12px; overflow: hidden; background: white;">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Ville <button class="sort-btn"><</button><button class="sort-btn">></button></th>
+                    <th>Pays</th>
+                    <th>Environnements</th>
+                    <th>Note <button class="sort-btn"><</button><button class="sort-btn">></button></th>
+                    <th>Date <button class="sort-btn"><</button><button class="sort-btn">></button></th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for voyage in voyages %}
+                <tr>
+                    <td>
+                        {% if voyage.image %}
+                            <img src="{{ asset('uploads/images/' ~ voyage.image) }}" class="img-mini" alt="{{ voyage.titre }}">
+                        {% else %}
+                            <small class="text-muted">Aucune</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_voyage_show', {'id': voyage.id}) }}" class="city-link">
+                            {{ voyage.ville }}
+                        </a>
+                    </td>
+                    <td>{{ voyage.pays|upper }}</td>
+                    <td>
+                        {% if voyage.environnement %}
+                            <span class="badge-env">{{ voyage.environnement.nom }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="{{ voyage.note >= 10 ? 'note-high' : 'note-low' }}">
+                            {{ voyage.note }}/20
+                        </span>
+                    </td>
+                    <td><small>{{ voyage.datecreation ? voyage.datecreation|date('d/m/Y') : '' }}</small></td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <a href="{{ path('app_voyage_show', {'id': voyage.id}) }}" class="btn btn-sm btn-outline-primary">show</a>
+                            <a href="{{ path('app_voyage_edit', {'id': voyage.id}) }}" class="btn btn-sm btn-outline-secondary">edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7" class="text-center py-5 text-muted">no records found</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
