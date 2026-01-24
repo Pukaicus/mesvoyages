@@ -3,11 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Voyage;
+use App\Entity\Environnement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-// NE PAS OUBLIER CETTE LIGNE CI-DESSOUS
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class VoyageType extends AbstractType
 {
@@ -15,12 +18,17 @@ class VoyageType extends AbstractType
     {
         $builder
             ->add('titre')
-            ->add('description')
-            // ON AJOUTE LE CHAMP IMAGE ICI
+            ->add('ville')
+            ->add('pays')
+            ->add('description', TextareaType::class)
             ->add('image', FileType::class, [
-                'label' => 'Photo du voyage (Fichier image)',
-                'mapped' => false,     // Très important : dit à Symfony de ne pas chercher à mettre le fichier direct en BDD
-                'required' => false,   // Permet de ne pas être obligé de mettre une photo à chaque fois
+                'label' => 'Photo du voyage',
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('environnement', EntityType::class, [
+                'class' => Environnement::class,
+                'choice_label' => 'nom',
             ])
         ;
     }

@@ -11,7 +11,6 @@ class AccueilController extends AbstractController
     #[Route('/accueil', name: 'app_accueil')]
     public function index(VoyageRepository $repository): Response
     {
-        // On récupère les 2 derniers voyages via le Repository
         $derniersVoyages = $repository->findLastTwo();
 
         return $this->render('accueil/index.html.twig', [

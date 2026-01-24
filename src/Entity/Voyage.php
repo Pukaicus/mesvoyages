@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\VoyageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-// On ajoute cette ligne pour pouvoir utiliser les validations (étape 2)
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VoyageRepository::class)]
@@ -25,8 +24,6 @@ class Voyage
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    // --- NOUVEAUX CHAMPS POUR L'ETAPE 5 ---
-
     #[ORM\Column(length: 255)]
     private ?string $ville = null;
 
@@ -34,12 +31,10 @@ class Voyage
     private ?string $pays = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    // REGLE : La date doit être aujourd'hui ou dans le passé
     #[Assert\LessThanOrEqual("today", message: "La date ne peut pas être dans le futur")]
     private ?\DateTimeInterface $datecreation = null;
 
     #[ORM\Column]
-    // REGLE : La note doit être entre 0 et 20
     #[Assert\Range(min: 0, max: 20, notInRangeMessage: "La note doit être entre 0 et 20")]
     private ?int $note = null;
 
@@ -47,14 +42,26 @@ class Voyage
     private ?int $tempmin = null;
 
     #[ORM\Column]
-    // REGLE : La température max doit être supérieure à la température min
     #[Assert\GreaterThan(propertyPath: "tempmin", message: "La t° max doit être supérieure à la t° min")]
     private ?int $tempmax = null;
 
     #[ORM\ManyToOne(inversedBy: 'voyages')]
-    private ?environnement $environnement = null;
+    private ?Environnement $environnement = null;
 
-    // --- GETTERS ET SETTERS ---
+    /**
+     * CONSTRUCTEUR : Initialise les valeurs par défaut
+     */
+    public function __construct()
+    {
+        // "today" assure que l'heure est à 00:00:00, donc jamais dans le futur
+        $this->datecreation = new \DateTime('today');
+        
+        $this->note = 0;
+        
+        // On met 0 et 1 pour respecter la règle "tempmax > tempmin"
+        $this->tempmin = 0;
+        $this->tempmax = 1;
+    }
 
     public function getId(): ?int { return $this->id; }
 
@@ -85,15 +92,14 @@ class Voyage
     public function getTempmax(): ?int { return $this->tempmax; }
     public function setTempmax(int $tempmax): static { $this->tempmax = $tempmax; return $this; }
 
-    public function getEnvironnement(): ?environnement
+    public function getEnvironnement(): ?Environnement
     {
         return $this->environnement;
     }
 
-    public function setEnvironnement(?environnement $environnement): static
+    public function setEnvironnement(?Environnement $environnement): static
     {
         $this->environnement = $environnement;
-
         return $this;
     }
 }

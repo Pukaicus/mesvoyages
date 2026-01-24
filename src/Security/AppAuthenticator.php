@@ -44,12 +44,10 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // Si l'utilisateur essayait d'accéder à une page précise (ex: /admin), on l'y envoie
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
-        // SINON, on le redirige par défaut vers la liste des voyages après la connexion
        return new RedirectResponse($this->urlGenerator->generate('app_voyage_index'));
     }
 

@@ -31,15 +31,14 @@ final class VoyageController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // 1. On récupère le fichier image depuis le formulaire
+            //On récupère le fichier image depuis le formulaire
             $imageFile = $form->get('image')->getData();
 
-            // 2. Si un fichier a été sélectionné
+            //Si un fichier a été sélectionné
             if ($imageFile) {
                 // On crée un nom unique (ex: paris-654ef3.jpg)
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
-
-                // On déplace le fichier dans le dossier public/uploads/images
+                
                 try {
                     $imageFile->move(
                         $this->getParameter('kernel.project_dir').'/public/uploads/images',
@@ -49,7 +48,7 @@ final class VoyageController extends AbstractController
                     // Erreur si le dossier n'existe pas ou n'est pas accessible
                 }
 
-                // 3. On enregistre le nom du fichier dans l'entité Voyage
+                //On enregistre le nom du fichier dans l'entité Voyage
                 $voyage->setImage($newFilename);
             }
 
