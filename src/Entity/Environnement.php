@@ -66,11 +66,8 @@ class Environnement
 
     public function removeVoyage(Voyage $voyage): static
     {
-        if ($this->voyages->removeElement($voyage)) {
-            // set the owning side to null (unless already changed)
-            if ($voyage->getEnvironnement() === $this) {
-                $voyage->setEnvironnement(null);
-            }
+    if ($this->voyages->removeElement($voyage) && $voyage->getEnvironnement() === $this) {
+            $voyage->setEnvironnement(null);
         }
 
         return $this;
