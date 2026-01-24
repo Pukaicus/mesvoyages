@@ -51,6 +51,9 @@ class Voyage
     #[Assert\GreaterThan(propertyPath: "tempmin", message: "La t° max doit être supérieure à la t° min")]
     private ?int $tempmax = null;
 
+    #[ORM\ManyToOne(inversedBy: 'voyages')]
+    private ?environnement $environnement = null;
+
     // --- GETTERS ET SETTERS ---
 
     public function getId(): ?int { return $this->id; }
@@ -81,4 +84,16 @@ class Voyage
 
     public function getTempmax(): ?int { return $this->tempmax; }
     public function setTempmax(int $tempmax): static { $this->tempmax = $tempmax; return $this; }
+
+    public function getEnvironnement(): ?environnement
+    {
+        return $this->environnement;
+    }
+
+    public function setEnvironnement(?environnement $environnement): static
+    {
+        $this->environnement = $environnement;
+
+        return $this;
+    }
 }
