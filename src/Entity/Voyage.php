@@ -48,17 +48,11 @@ class Voyage
     #[ORM\ManyToOne(inversedBy: 'voyages')]
     private ?Environnement $environnement = null;
 
-    /**
-     * CONSTRUCTEUR : Initialise les valeurs par défaut
-     */
     public function __construct()
     {
-        // "today" assure que l'heure est à 00:00:00, donc jamais dans le futur
         $this->datecreation = new \DateTime('today');
         
         $this->note = 0;
-        
-        // On met 0 et 1 pour respecter la règle "tempmax > tempmin"
         $this->tempmin = 0;
         $this->tempmax = 1;
     }

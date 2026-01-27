@@ -15,21 +15,14 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/voyage')]
 final class VoyageController extends AbstractController
 {
-    /**
-     * Affiche la liste des voyages avec option de filtrage par environnement
-     */
     #[Route(name: 'app_voyage_index', methods: ['GET', 'POST'])]
     public function index(Request $request, VoyageRepository $voyageRepository): Response
     {
-        // On récupère la saisie du formulaire (attribut name="environnement_filtre" dans le Twig)
         $envSaisi = $request->request->get('environnement_filtre');
 
         if ($envSaisi) {
-            // Si une recherche est lancée, on utilise la méthode du Repository
             $voyages = $voyageRepository->findByEnvironnement($envSaisi);
         } else {
-            // Sinon, on affiche tout, trié par date de création décroissante (Antichronologique)
-            // C'est ce qui est demandé explicitement dans ton sujet d'évaluation.
             $voyages = $voyageRepository->findBy([], ['datecreation' => 'DESC']);
         }
 

@@ -21,14 +21,12 @@ class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            // On crée le mail
             $email = (new Email())
                 ->from($data['email'])
                 ->to('admin@mesvoyages.com')
                 ->subject('Nouveau message de contact')
                 ->text($data['message']);
 
-            // On simule l'envoi
             $mailer->send($email);
 
             $this->addFlash('success', 'Votre message a bien été envoyé !');

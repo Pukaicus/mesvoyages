@@ -20,7 +20,6 @@ class UserFixture extends Fixture
     {
         $user = new User();
         $user->setUsername("admin");
-        // On définit le mot de passe "admin" et on le hache
         $user->setPassword($this->passwordHasher->hashPassword($user, "admin"));
         $user->setRoles(['ROLE_ADMIN']);
 
